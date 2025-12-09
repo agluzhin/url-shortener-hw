@@ -60,6 +60,4 @@ public class ShortLinkService {
             System.err.printf("\n%s.\n", ex.getMessage());
         }
     }
-
-
 }
