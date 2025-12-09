@@ -9,8 +9,6 @@ import java.net.URI;
 import java.security.SecureRandom;
 
 public class ShortLinkService {
-    private static final String BASE_URL = "https://clck.ru/";
-
     private final ShortLinkRepository SHORT_LINK_REPOSITORY;
     private final NotificationService NOTIFICATION_SERVICE;
     private final SecureRandom SECURE_RANDOM = new SecureRandom();
@@ -36,7 +34,7 @@ public class ShortLinkService {
         return sb.toString();
     }
 
-    private void visitLink(String shortCode) {
+    public void visitLink(String shortCode) {
         try {
             ShortLink shortLink = SHORT_LINK_REPOSITORY.getLinkByCode(shortCode);
 
@@ -57,7 +55,7 @@ public class ShortLinkService {
                 NOTIFICATION_SERVICE.notifyUser(shortLink);
             }
         } catch (Exception ex) {
-            System.err.printf("\n%s.\n", ex.getMessage());
+            System.err.println(ex.getMessage());
         }
     }
 }
