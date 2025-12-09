@@ -8,17 +8,17 @@ public class ShortLink {
     private final String OWNER_ID;
     private final int CLICK_LIMIT;
     private final Instant CREATION_TIME;
-    private final long TOTAL_SECONDS;
+    private final long LIFE_LIMIT;
 
     private int clickCount = 0;
 
-    public ShortLink(String originalURL, String shortCode, String ownerId, int clickLimit, long totalSeconds) {
+    public ShortLink(String originalURL, String shortCode, String ownerId, int clickLimit, long lifeLimit) {
         ORIGINAL_URL = originalURL;
         SHORT_CODE = shortCode;
         OWNER_ID = ownerId;
         CLICK_LIMIT = clickLimit;
         CREATION_TIME = Instant.now();
-        TOTAL_SECONDS = totalSeconds;
+        LIFE_LIMIT = lifeLimit;
     }
 
     public String getOriginalURL() {
@@ -33,6 +33,10 @@ public class ShortLink {
         return OWNER_ID;
     }
 
+    public int getClickLimit() {
+        return CLICK_LIMIT;
+    }
+
     public int getClickCount() {
         return clickCount;
     }
@@ -42,6 +46,6 @@ public class ShortLink {
     }
 
     public boolean isExpired() {
-        return Instant.now().isAfter(CREATION_TIME.plusSeconds(TOTAL_SECONDS)) || clickCount >= CLICK_LIMIT;
+        return Instant.now().isAfter(CREATION_TIME.plusSeconds(LIFE_LIMIT)) || clickCount >= CLICK_LIMIT;
     }
 }
