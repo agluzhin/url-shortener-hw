@@ -3,34 +3,34 @@ package org.agluzhin.entities;
 import java.time.Instant;
 
 public class ShortLink {
-    private final String originalURL;
-    private final String shortURL;
-    private final String ownerId;
-    private final int clickLimit;
-    private final Instant creationTime;
-    private final long totalSeconds;
+    private final String ORIGINAL_URL;
+    private final String SHORT_CODE;
+    private final String OWNER_ID;
+    private final int CLICK_LIMIT;
+    private final Instant CREATION_TIME;
+    private final long TOTAL_SECONDS;
 
     private int clickCount = 0;
 
-    public ShortLink(String originalURL, String shortURL, String ownerId, int clickLimit, long totalSeconds) {
-        this.originalURL = originalURL;
-        this.shortURL = shortURL;
-        this.ownerId = ownerId;
-        this.clickLimit = clickLimit;
-        this.creationTime = Instant.now();
-        this.totalSeconds = totalSeconds;
+    public ShortLink(String originalURL, String shortCode, String ownerId, int clickLimit, long totalSeconds) {
+        ORIGINAL_URL = originalURL;
+        SHORT_CODE = shortCode;
+        OWNER_ID = ownerId;
+        CLICK_LIMIT = clickLimit;
+        CREATION_TIME = Instant.now();
+        TOTAL_SECONDS = totalSeconds;
     }
 
     public String getOriginalURL() {
-        return originalURL;
+        return ORIGINAL_URL;
     }
 
-    public String getShortURL() {
-        return shortURL;
+    public String getShortCode() {
+        return SHORT_CODE;
     }
 
     public String getOwnerId() {
-        return ownerId;
+        return OWNER_ID;
     }
 
     public int getClickCount() {
@@ -42,6 +42,6 @@ public class ShortLink {
     }
 
     public boolean isExpired() {
-        return Instant.now().isAfter(creationTime.plusSeconds(totalSeconds)) || clickCount >= clickLimit;
+        return Instant.now().isAfter(CREATION_TIME.plusSeconds(TOTAL_SECONDS)) || clickCount >= CLICK_LIMIT;
     }
 }
