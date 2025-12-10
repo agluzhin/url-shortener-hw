@@ -22,7 +22,8 @@ public class Main {
             System.out.println();
             System.out.println("1. Создать короткую ссылку;");
             System.out.println("2. Перейти по короткой ссылке;");
-            System.out.println("3. Выйти.");
+            System.out.println("3. Просмотреть все короткие ссылки;");
+            System.out.println("4. Выйти.");
             System.out.print("Выберите действие: ");
             int userChoice = Integer.parseInt(scanner.nextLine());
 
@@ -36,14 +37,21 @@ public class Main {
                     long lifeLimit = Long.parseLong(scanner.nextLine());
 
                     ShortLink shortLink = shortLinkService.createShortLink(originalUrl, user, clickLimit, lifeLimit);
-                    System.out.printf("Ваша короткая ссылка: %s%n", shortLink.getURL());
+                    System.out.printf("Ваша короткая ссылка: %s%n", shortLink.getShortUrl());
                     break;
                 case 2:
-                    System.out.print("\nВведите код короткой ссылки (запись после https://clck.ru/): ");
-                    String shortCode = scanner.nextLine();
-                    shortLinkService.visitLink(shortCode);
+                    System.out.print("\nВведите короткую ссылку: ");
+                    String shortUrl = scanner.nextLine();
+                    shortLinkService.visitLink(user.getId(), shortUrl);
                     break;
                 case 3:
+                    System.out.println();
+                    System.out.printf("Все короткие ссылки для пользователя %s:", user.getId());
+                    for (String url : shortLinkRepository.getAllUserLinks(user.getId()).keySet()) {
+                        System.out.println(url);
+                    }
+                    break;
+                case 4:
                     System.out.println("\nДо свидания!");
                     System.exit(0);
                     break;
