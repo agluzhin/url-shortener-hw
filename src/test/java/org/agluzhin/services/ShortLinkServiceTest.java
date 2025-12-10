@@ -105,7 +105,4 @@ class ShortLinkServiceTest {
         );
         assertEquals(noSuchElementException.getMessage(), targetErrorMessage);
     }
-
-
-
 }
