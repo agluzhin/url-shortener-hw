@@ -23,7 +23,7 @@ public class ShortLinkRepository {
         return userLinks.get(shortUrl);
     }
 
-    public Map<String, Map<String, ShortLink>> getAllLinks() {
-        return LINKS;
+    public Map<String, ShortLink> getAllUserLinks(String userId) {
+        return LINKS.get(userId);
     }
 }
