@@ -9,6 +9,8 @@ import java.net.URI;
 import java.security.SecureRandom;
 
 public class ShortLinkService {
+    private static final String BASE_URL = "https://clck.ru/";
+
     private final ShortLinkRepository SHORT_LINK_REPOSITORY;
     private final NotificationService NOTIFICATION_SERVICE;
     private final SecureRandom SECURE_RANDOM = new SecureRandom();
@@ -19,9 +21,9 @@ public class ShortLinkService {
     }
 
     public ShortLink createShortLink(String originalURL, User user, int clickLimit, long totalSeconds) {
-        String shortCode = generateShortCode();
-        ShortLink shortLink = new ShortLink(originalURL, shortCode, user.getId(), clickLimit, totalSeconds);
-        SHORT_LINK_REPOSITORY.addLink(shortLink);
+        String shortUrl = BASE_URL + generateShortCode();
+        ShortLink shortLink = new ShortLink(originalURL, shortUrl, user.getId(), clickLimit, totalSeconds);
+        SHORT_LINK_REPOSITORY.addLink(user.getId(), shortLink);
         return shortLink;
     }
 
@@ -34,16 +36,16 @@ public class ShortLinkService {
         return sb.toString();
     }
 
-    public void visitLink(String shortCode) {
+    public void visitLink(String userId, String shortUrl) {
         try {
-            ShortLink shortLink = SHORT_LINK_REPOSITORY.getLinkByCode(shortCode);
+            ShortLink shortLink = SHORT_LINK_REPOSITORY.getLink(userId, shortUrl);
 
             if (shortLink == null) {
-                throw new Exception(String.format("ссылка с кодом '%s' не найдена", shortCode));
+                throw new Exception(String.format("ссылка с кодом '%s' не найдена", shortUrl));
             }
 
             if (shortLink.isExpired()) {
-                SHORT_LINK_REPOSITORY.deleteLink(shortCode);
+                SHORT_LINK_REPOSITORY.deleteLink(userId, shortUrl);
                 NOTIFICATION_SERVICE.notifyUser(shortLink);
             }
 
@@ -51,7 +53,7 @@ public class ShortLinkService {
             Desktop.getDesktop().browse(new URI(shortLink.getOriginalURL()));
 
             if (shortLink.isExpired()) {
-                SHORT_LINK_REPOSITORY.deleteLink(shortCode);
+                SHORT_LINK_REPOSITORY.deleteLink(userId, shortUrl);
                 NOTIFICATION_SERVICE.notifyUser(shortLink);
             }
         } catch (Exception ex) {
