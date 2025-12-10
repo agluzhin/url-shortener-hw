@@ -89,7 +89,7 @@ public class ShortLinkRepository {
         } else {
             throw new NoSuchElementException(
                     String.format(
-                            "пользователь с id '%s' не найден",
+                            "у пользователя '%s' пока нет ссылок",
                             userId
                     )
             );
