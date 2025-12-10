@@ -3,11 +3,21 @@ package org.agluzhin.services;
 import org.agluzhin.entities.ShortLink;
 
 public class NotificationService {
-    public void notifyUser(ShortLink link) throws Exception {
+    public void notifyUser(ShortLink link) throws IllegalStateException {
         if (link.getClickCount() >= link.getClickLimit()) {
-            throw new Exception(String.format("ссылка '%s' недоступна - лимит переходов исчерпан\n", link.getShortCode()));
+            throw new IllegalStateException(
+                    String.format(
+                            "ссылка '%s' недоступна - лимит переходов исчерпан",
+                            link.getShortUrl()
+                    )
+            );
         } else {
-            throw new Exception(String.format("ссылка '%s' недоступна - срок жизни истек\n", link.getShortCode()));
+            throw new IllegalStateException(
+                    String.format(
+                            "ссылка '%s' недоступна - срок жизни истек\n",
+                            link.getShortUrl()
+                    )
+            );
         }
     }
 }
