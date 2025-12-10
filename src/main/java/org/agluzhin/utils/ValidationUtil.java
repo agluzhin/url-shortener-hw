@@ -24,4 +24,26 @@ public class ValidationUtil {
             );
         }
     }
+
+    public static void requirePositiveAndNonZeroInt(String entityFieldName, int entityFieldValue) {
+        if (entityFieldValue <= 0) {
+            throw new IllegalArgumentException(
+                    String.format(
+                            "объект '%s' не может быть меньше нуля или равным нулю",
+                            entityFieldName
+                    )
+            );
+        }
+    }
+
+    public static void requirePositiveAndNonZeroLong(String entityFieldName, long entityFieldValue) {
+        if (entityFieldValue <= 0) {
+            throw new IllegalArgumentException(
+                    String.format(
+                            "объект '%s' не может быть меньше нуля или равным нулю",
+                            entityFieldName
+                    )
+            );
+        }
+    }
 }
