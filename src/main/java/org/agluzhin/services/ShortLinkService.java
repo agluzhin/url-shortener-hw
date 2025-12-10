@@ -60,10 +60,5 @@ public class ShortLinkService {
 
         shortLink.incrementClicks();
         Desktop.getDesktop().browse(new URI(shortLink.getOriginalURL()));
-
-        if (shortLink.isExpired()) {
-            SHORT_LINK_REPOSITORY.deleteLink(userId, shortUrl);
-            NOTIFICATION_SERVICE.notifyUser(shortLink);
-        }
     }
 }
