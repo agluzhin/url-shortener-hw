@@ -5,8 +5,11 @@ import org.agluzhin.entities.User;
 import org.agluzhin.repositories.ShortLinkRepository;
 
 import java.awt.*;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.SecureRandom;
+import java.util.NoSuchElementException;
 
 public class ShortLinkService {
     private static final String BASE_URL = "https://clck.ru/";
@@ -36,28 +39,31 @@ public class ShortLinkService {
         return sb.toString();
     }
 
-    public void visitLink(String userId, String shortUrl) {
-        try {
-            ShortLink shortLink = SHORT_LINK_REPOSITORY.getLink(userId, shortUrl);
+    public void visitLink(String userId, String shortUrl)
+            throws NoSuchElementException, URISyntaxException, IOException {
+        ShortLink shortLink = SHORT_LINK_REPOSITORY.getLink(userId, shortUrl);
 
-            if (shortLink == null) {
-                throw new Exception(String.format("ссылка с кодом '%s' не найдена", shortUrl));
-            }
+        if (shortLink == null) {
+            throw new NoSuchElementException(
+                    String.format(
+                            "ссылка '%s' для пользователя '%s' не найдена",
+                            shortUrl,
+                            userId
+                    )
+            );
+        }
 
-            if (shortLink.isExpired()) {
-                SHORT_LINK_REPOSITORY.deleteLink(userId, shortUrl);
-                NOTIFICATION_SERVICE.notifyUser(shortLink);
-            }
+        if (shortLink.isExpired()) {
+            SHORT_LINK_REPOSITORY.deleteLink(userId, shortUrl);
+            NOTIFICATION_SERVICE.notifyUser(shortLink);
+        }
 
-            shortLink.incrementClicks();
-            Desktop.getDesktop().browse(new URI(shortLink.getOriginalURL()));
+        shortLink.incrementClicks();
+        Desktop.getDesktop().browse(new URI(shortLink.getOriginalURL()));
 
-            if (shortLink.isExpired()) {
-                SHORT_LINK_REPOSITORY.deleteLink(userId, shortUrl);
-                NOTIFICATION_SERVICE.notifyUser(shortLink);
-            }
-        } catch (Exception ex) {
-            System.err.println(ex.getMessage());
+        if (shortLink.isExpired()) {
+            SHORT_LINK_REPOSITORY.deleteLink(userId, shortUrl);
+            NOTIFICATION_SERVICE.notifyUser(shortLink);
         }
     }
 }
