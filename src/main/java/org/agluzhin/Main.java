@@ -112,7 +112,9 @@ public class Main {
 
             Map<String, ShortLink> allUserLinks = shortLinkRepository.getAllUserLinks(user.getId());
             for (String url : allUserLinks.keySet()) {
-                System.out.println(url);
+                if (!allUserLinks.get(url).isExpired()) {
+                    System.out.println(url);
+                }
             }
         } catch (NoSuchElementException ex) {
             System.out.println("\nОшибка: " + ex.getMessage());
