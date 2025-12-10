@@ -70,10 +70,12 @@ public class Main {
             System.out.print("Введите лимит переходов: ");
             String clickLimit = scanner.nextLine();
             ValidationUtil.requireNonNullOrEmpty("clickLimit", clickLimit);
+            ValidationUtil.requirePositiveAndNonZeroInt("clickLimit", Integer.parseInt(clickLimit));
 
             System.out.print("Введите время жизни ссылки в секундах: ");
             String lifeLimit = scanner.nextLine();
             ValidationUtil.requireNonNullOrEmpty("lifeLimit", lifeLimit);
+            ValidationUtil.requirePositiveAndNonZeroLong("lifeLimit", Long.parseLong(lifeLimit));
 
             ShortLink shortLink = shortLinkService.createShortLink(
                     originalUrl,
